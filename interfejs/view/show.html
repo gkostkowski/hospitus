@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html ng-app="myApp">
+  <head>
+    <title>Przeglądanie historii</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">
+	<link href="css/menu.css" rel="stylesheet">
+   <script src="js/angular.min.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.13.0.js"></script>
+    <script src="js/controller.js"></script>
+	<script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/jquery-ui-1.8.10.custom.min.js"></script>
+	
+  </head>
+  <body>
+	
+    <div id="main_panel"> 
+		<img class="logo" src="img/iz-logo.png"/>
+		<div  id="title">Hospitus
+		</div> 
+		<div id="subtitle">
+			System zarządzania procesem hospitacji<br>wydziału Informatyki i Zarządzania
+		</div>
+	</div> 
+	<nav id="menu-box">
+		<ol id="menu">
+	 		<li><a href="index.html">Strona główna</a></li>
+			<li>Zarządzanie planem hospitacji
+				<ul>
+					<li> Przeglądanie planu</li>
+					<li><a href="create_schedule.html"> Tworzenie planu</a></li>
+					<li> Modyfikacja planu</li>
+					<li> Usuwanie planu</li>
+				</ul>
+			</li>
+			<li><a href="#">Zarządzanie statystykami</a></li>
+		</ol>
+	</nav>
+	<div class="log-info"><p>Zalogowany jako <b>pełnomocnik</b> | <a href="#">Wyloguj</a></p>
+	</div>
+    <div id="content">
+		<div id="content_title">
+			Przeglądanie historii hospitacji
+		</div>
+		<div id="breadcrumb">
+			<p>Jesteś w: <a href="index.html">Zarządzanie planem hospitacji</a> > 
+			<a href="create_schedule.html">Tworzenie planu</a> > <a href="#">Przeglądanie historii hospitacji</a> > Szczegóły wpisu</p>
+		</div>
+		<div id="main-frame" class="frame" >
+			<div class="frame">
+				<div class="frame frame-title">
+					Szczegóły wpisu
+				</div>
+				<div class="row col-sm-10 col-sm-offset-1">
+					<div class=" col-sm-5 col-sm-offset-2">
+						<input class="btn btn-primary form-control input-sm" type="button" onclick="window.location='create_schedule.html';" value="Powrót"/>
+					</div>
+					<div class=" col-sm-5">
+						<input class="btn btn-default form-control input-sm" type="button" value="Napisz wiadomość"/></div>
+				</div>
+			</div>
+			<div  ng-controller="myCtrl">
+				<div  ng-repeat="naucz in nauczyciele | getCurrent" >
+					<div class="page-header" style="padding-left:30px;"><h2>{{naucz.imie}} {{naucz.nazwisko}}</h2></div>
+					<div class="row">
+						<div class="col-sm-5 col-sm-offset-1">
+							<img ng-src="{{naucz.imgName}}" alt="{{naucz.projName}}"  />
+							<div class="form-group">
+								<label for="name">Imię i nazwisko</label>
+								<p id="name"><i>{{naucz.tyt_nau}} </i>{{naucz.imie}} {{naucz.nazwisko}}</p>
+							</div>
+							<div class="form-group">
+								<label for="kat">Katedra</label>
+								<p id="kat">{{naucz.katedra}}</p>
+							</div>
+						</div>
+						<label >Szczegóły hospitacji</label>
+						<div class="col-sm-6 ">
+									<div class="form-group" >
+										<label for="dzien">w dniu</label>
+										<p id="dzien">{{naucz.ost_hosp}} r.</p>
+									</div>
+									<div class="form-group" >
+										<label for="godz">o godzinie</label>
+										<p id="godz">13:15</p>
+									</div>
+									<div class="form-group">
+										<label for="sala">w sali</label>
+										<p id="sala">s. 121, bud. C-3</p>
+									</div>
+							<div class="form-group">
+								<label for="gr">grupa zajęciowa</label>
+								<p id="gr">INZ432B3</p>
+							</div>
+						</div>
+					</div>
+				</div>				
+			</div>
+      </div>
+	</div>
+	<div class="frame footer">
+		<p><a href="index.html">Strona główna</a> | <a href="#">Kontakt</a> | <a href="#">Informacje dodatkowe</a></p>
+		<p>Hospitus &copy; 2016</p>
+		<p>Kostkowski Grzegorz</p>
+	</div>
+  </body>
+</html>

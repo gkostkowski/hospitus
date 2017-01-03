@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html ng-app="myApp">
+  <head>
+    <title>Tworzenie planu</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">
+	<link href="css/snackbar.css" rel="stylesheet">
+	<link href="css/menu.css" rel="stylesheet">
+	<link href="css/bootstrap-datepicker.css" rel="stylesheet">
+	<script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/jquery-ui-1.8.10.custom.min.js"></script>
+   <script src="js/angular.min.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.13.0.js"></script>
+	<script src="js/bootstrap-datepicker.min.js"></script>
+    <script src="js/controller.js"></script>
+    <script src="js/interface.js"></script>
+
+  </head>
+  <body>
+	
+    <div id="main_panel"> 
+		<img class="logo" src="img/iz-logo.png"/>
+		<div  id="title">Hospitus
+		</div> 
+		<div id="subtitle">
+			System zarządzania procesem hospitacji<br>wydziału Informatyki i Zarządzania
+		</div>
+	</div> 
+	<nav id="menu-box">
+		<ol id="menu">
+	 		<li><a href="index.html">Strona główna</a></li>
+			<li>Zarządzanie planem hospitacji
+				<ul>
+					<li> Przeglądanie planu</li>
+					<li><a href="create_schedule.html"> Tworzenie planu</a></li>
+					<li> Modyfikacja planu</li>
+					<li> Usuwanie planu</li>
+
+				</ul>
+			</li>
+			<li><a href="#">Zarządzanie statystykami</a></li>
+		</ol>
+	</nav>
+	<div class="log-info"><p>Zalogowany jako <b>pełnomocnik</b> | <a href="#">Wyloguj</a></p>
+	</div>
+    <div id="content"  ng-controller="myCtrl">
+		<div id="content_title">
+			Tworzenie planu hospitacji
+		</div>
+		<div id="breadcrumb">
+			<p>Jesteś w: <a href="index.html">Zarządzanie planem hospitacji</a> > 
+			<a href="#">Tworzenie planu hospitacji</a></p>
+		</div>
+		<div id="main-frame" class="frame" >
+			<div class="frame">
+				<div class="frame frame-title">
+					Menu tworzenia planu hospitacji
+				</div>
+				<div class="frame3">
+				<p>Tworzenie nowego planu hospitacji. W celu stworzenia nowego planu wykonaj: 
+					<ol>
+						<li>Dodaj wszystkie propozycje hospitacji</li>
+						<li>Wprowadź dodatkowe informacje dot. planu </li>
+						<li>Zatwierdź w celu zapisania lub zatwierdź <u>z przekazaniem do rozparzenia</u> (uwaga! akcja nieodrwacalna).</li>
+					</ol>
+				</p></div>
+				<!--
+				<div class="frame control-panel">
+				<p>Panel akcji</p>
+				<input  type="button" value="czyść"/>
+				<input  type="button" value="czyść"/>
+				<input  type="button" value="Zapisz jako wersja robocza"/>
+				<input  type="button" value="Zapisz i przekaż do rozpatrzenia"/>
+				</div>-->
+				<details >
+					<summary>Zapisane wersje
+					</summary>
+					<p>Brak zapisanych wersji planu.</p>
+				</details>
+				<details >
+					<summary>Dodatkowe informacje
+					</summary>
+					<form id="f_ogolne">
+					<div class="row">
+						<div class=" col-sm-5 col-sm-offset-0 extra-margin-top">
+							<div class="form-group">
+								<label for="oznacz">Oznaczenie zapisywanej wersji</label>
+								<input type='text' id="oznacz" class="form-control input-sm" />
+							</div>
+						</div>
+					
+						<div class=" col-sm-10 col-sm-offset-1">
+							<div class="form-group">
+								<label for="kom">Komentarze</label>
+								<textarea id="kom" class="form-control input-sm"></textarea> 
+							</div>
+
+						</div>
+					
+						<div class=" col-sm-10 col-sm-offset-1">
+							<!-- <input class="btn btn-primary form-control input-sm" type="button" value="Zatwierdź"/>-->
+									<input class="btn   btn-default form-control input-sm" type="button" value="Czyść" onclick="clearForm('f_ogolne');"/>
+						</div>
+					</div>
+					</form>
+					
+				</details>
+				<br>
+				<div class="container fill-parent" >
+				<div class="row">
+					<div class="col-sm-6 checkbox">
+								<label><input type="checkbox" id="do_rozp"ng-model="search5" value=""><i>Przekaż do rozpatrzenia</i></label>
+					</div>
+					<input class="btn btn-success col-sm-3 form-control input-sm" type="button" onclick="proceedRequest(true, 'f_ogolne', document.getElementById('do_rozp').checked);" value="Zatwierdź"/>
+					
+				</div>
+				<div class="row">					
+					<input class="btn btn-danger col-sm-11 form-control input-sm" type="button" onclick="proceedRequest(false, 'f_ogolne');" value="Zatwierdź"/>
+				</div></div>
+				
+			</div>
+			<details >
+					<summary>Dodane propozycje hospitacji
+					</summary>
+					<p>Brak dodanych wpisów.</p>
+			</details>
+			<details >
+					<summary>Nowa propozycja hospitacji
+					</summary>
+					<form class="container fill-parent" id="nowa_prop">
+						<div class="row col-sm-10 col-sm-offset-1" style="float:none !important; margin-top:12px;">
+							<div class="form-group">
+								<label for="datetimepicker1">Data proponowanej hospitacji</label>
+								<div class='input-group date' id='datetimepicker1'>
+									<input type='text' class="form-control input-sm" />
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="row col-sm-10 col-sm-offset-1">
+							<div class="form-group">
+								<label >Osoba hospitowana</label>
+								<select  name="workers" id="workers" class="form-control fill-parent" >
+									<option value="" disabled selected hidden>Wybierz pracownika</option>
+									<option>Jan Kowalski prof. W8/K4</option>
+									<option>Romuald Gawron mgr W8/K3</option>
+									<option>Anna Mucha mgr W8/K3</option>
+									<option>Janusz Brzoza inż. W8/K5</option>
+		
+								</select>
+							</div>
+						</div>
+						<div class="row col-sm-10 col-sm-offset-1">
+							<div class="form-group">
+								<label >Członkowie zespołu hospitującego</label>
+								<select multiple name="workers" id="workers" class="form-control fill-parent" style="height:10em !important;" title="Użyj LPM + ctrl/shift by wybrać kilku pracowników">
+									<option>Jan Kowalski prof. W8/K4</option>
+									<option>Romuald Gawron mgr W8/K3</option>
+									<option>Anna Mucha mgr W8/K3</option>
+									<option>Janusz Brzoza inż. W8/K5</option>
+								</select>
+							</div>
+						</div>
+						<div class="row col-sm-10 col-sm-offset-1">
+							<div class="form-group">
+								<label for="kod">Kod grupy zajęciowej</label>
+								<input type='text' id="kod" class="form-control input-sm" /><br>
+							</div>
+
+							
+						</div>
+
+							
+						<div class="row col-sm-10 col-sm-offset-1">
+								
+									<input class="btn btn-success  form-control input-sm" type="button" onclick="proceedRequest(true, 'nowa_prop');" value="Zatwierdź"/>
+									<input class="btn btn-danger  form-control input-sm" type="button" onclick="proceedRequest(false, 'nowa_prop');" value="Zatwierdź"/>
+
+									<input class="btn   btn-default form-control input-sm" type="button" value="Czyść" onclick="clearForm('nowa_prop');"/>
+							</div>
+						
+					</form>
+					
+			</details>
+			<details >
+					<summary>Historia hospitacji
+					</summary>
+					<details >
+					<summary	id="s_filtr">Filtruj
+					</summary>
+					<p style="margin:8px; font-size: 0.7em; font-style:italic;">Uzyj filtrowania aby zawęzić wyświetlane wyniki.</p>
+						
+						<form id="f_filtr" class="frame2">
+						<div class="row">
+							<div class="col-sm-4 form-group"><input class="form-control input-sm" type="text" ng-model="search" placeholder="Nazwisko" value=""/></div>
+							
+							<div class="col-sm-4 form-group">
+								<select class="form-control input-sm" id="sel1" ng-model="search2" >
+									<option value="" disabled selected hidden>Tytuł naukowy</option>
+									<option >inż.</option>
+									<option>mgr</option>
+									<option >dr</option>
+									<option>prof.</option>
+								</select>
+							</div>
+							<div class="col-sm-4 form-group"><input class="form-control input-sm" type="text" ng-model="search3" placeholder="Katedra" value=""/></div>
+						</div>
+						<div class="row">
+								<div class="col-sm-4 form-group">
+									<div class='input-group date' id='datetimepicker3'  ng-model="search4" >
+										<input type='text' class="form-control input-sm" data-toggle="tooltip" title="Uwzględnia tylko pracowników niehospitowanych w okresie [zadana data; dzisiaj]" placeholder="Niehospitowany po dniu"/>
+										<span class="input-group-addon">
+											<small><span class="glyphicon glyphicon-calendar" ></span></small>
+										</span>
+										<!--<p class="title">Data proponowanej hospitacji</p>-->
+									</div>
+								</div>
+							
+							<div class="col-sm-4 checkbox">
+								<label><input type="checkbox" ng-model="search5" value=""><i>doktorant?</i></label>
+							</div>
+							<div class="col-sm-4">
+								<input class="btn form-control input-sm" type="button" value="czyść" onclick="clearForm('f_filtr');"/>
+							</div>						
+						</div>
+						</form>
+				</details>
+				<div class="frame2" ng-controller="myCtrl" style="background:white;">
+					 <table  class="table table-hover" >
+						<thead >
+							<th>l.p.</th>
+							<th>nazwisko</th>
+							<th>imię</th>
+							<th>tytuł naukowy</th>
+							<th>katedra</th>
+							<th>data ostatniej hospitacji</th>
+							<th>zdjęcie</th>
+							<th> </th>
+						</thead>
+						<tbody>				
+							<tr ng-repeat="naucz in nauczyciele | myFilter:search" >
+								<td >{{$index+1}}</td>
+								<td >{{naucz.nazwisko}}</td>
+								<td >{{naucz.imie}}</td>
+								<td >{{naucz.tyt_nau}}</td>
+								<td >{{naucz.katedra}}</td>
+								<td >{{naucz.ost_hosp}} r.</td>
+								<td >
+									<img 
+									class="thumbnail" ng-src="{{naucz.imgName}}"  style="width:30px; height:30px"></img>
+								</td>
+								<td ><a ng-click="$event.preventDefault(); linkClicked($index, '/show.html')" target="_blank" style="font-size:0.6em;">szczegóły</a></td>
+							</tr>			
+						</tbody>
+					</table>		
+				</div>
+			</details>
+			<details onclick="return false;">
+					<summary>Lista pracowników
+					</summary>
+					<!-- nie implementowane -->
+			</details>
+			<details onclick="return false;">
+					<summary>Powierzenia
+					</summary>
+					<!-- nie implementowane -->
+			</details>
+		</div>
+		</div>
+	</div>
+	<div class="frame footer">
+		<p><a href="index.html">Strona główna</a> | <a href="#">Kontakt</a> | <a href="#">Informacje dodatkowe</a></p>
+		<p>Hospitus &copy; 2016</p>
+		<p>Kostkowski Grzegorz</p>
+	</div>
+      <div id="snackbar"> </div>
+  </body>
+</html>
